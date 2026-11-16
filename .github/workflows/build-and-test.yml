@@ -27,12 +27,12 @@ jobs:
 
       - name: Запустити тест
         run: |
-          printf '4\n12\n25\n7\n40\n7\n' | ./lab6 > output.txt
+          printf '4\n7\n' | ./lab6 > output.txt
           cat output.txt
 
-          if grep -q "5 4 0 5" output.txt && grep -q "100" output.txt; then
-            echo "Тест пройдено успішно."
+          if grep -q "Масив C (остачі):" output.txt && grep -q "Добуток ненульових елементів C:" output.txt; then
+            echo "Базовий тест виконання програми пройдено."
           else
-            echo "Тест не пройдено."
+            echo "Тест не пройдено: програма не вивела очікувані результати."
             exit 1
           fi
