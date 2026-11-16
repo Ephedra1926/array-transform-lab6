@@ -7,11 +7,13 @@
 
 void print_array(const int a[], int n)
 {
+void print_array(const int a[], int n)
+{
+    printf("[");
     for (int i = 0; i < n; i++) {
-        printf("%d ", a[i]);
+        printf("%5d", a[i]);
     }
-
-    printf("\n");
+    printf(" ]\n");
 }
 
 int checked_multiply(long long a, long long b, long long *result)
