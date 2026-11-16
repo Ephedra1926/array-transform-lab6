@@ -1,10 +1,21 @@
-
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 #include <limits.h>
 
 #define MAX_N 100
 
-int checked_multiply(long long a, long long b, long long *result) {
+void print_array(const int a[], int n)
+{
+    for (int i = 0; i < n; i++) {
+        printf("%d ", a[i]);
+    }
+
+    printf("\n");
+}
+
+int checked_multiply(long long a, long long b, long long *result)
+{
     if (a == 0 || b == 0) {
         *result = 0;
         return 1;
@@ -25,62 +36,61 @@ int checked_multiply(long long a, long long b, long long *result) {
     return 1;
 }
 
-int main(void) {
-    int n, k;
-    int A[MAX_N], C[MAX_N];
+int main(void)
+{
+    int a[MAX_N];
+    int c[MAX_N];
+    int n;
+    int k;
     long long product = 1;
     int has_nonzero = 0;
 
-    printf("Enter array size (1-%d): ", MAX_N);
+    printf("Введіть розмір масиву (1..%d): ", MAX_N);
+
     if (scanf("%d", &n) != 1 || n < 1 || n > MAX_N) {
-        printf("Invalid array size.\n");
+        printf("Помилка: некоректний розмір масиву.\n");
         return 1;
     }
 
-    printf("Enter %d integer elements:\n", n);
+    srand((unsigned int)time(NULL));
+
     for (int i = 0; i < n; i++) {
-        if (scanf("%d", &A[i]) != 1) {
-            printf("Invalid array element.\n");
-            return 1;
-        }
+        a[i] = rand() % 100;
     }
 
-    printf("Enter integer k (non-zero, less than 10): ");
+    printf("Заданий масив A: ");
+    print_array(a, n);
+
+    printf("Введіть ціле число k (k < 10, k != 0): ");
+
     if (scanf("%d", &k) != 1 || k == 0 || k >= 10 || k <= -10) {
-        printf("Invalid k. It must be non-zero and have absolute value less than 10.\n");
+        printf("Помилка: некоректне значення k.\n");
         return 1;
     }
 
     for (int i = 0; i < n; i++) {
-        C[i] = A[i] % k;
+        c[i] = (int)((long long)a[i] % (long long)k);
 
-        if (C[i] != 0) {
-            long long new_product;
+        if (c[i] != 0) {
+            long long next_product;
 
-            if (!checked_multiply(product, C[i], &new_product)) {
-                printf("Product is too large to calculate.\n");
+            if (!checked_multiply(product, c[i], &next_product)) {
+                printf("Добуток виходить за межі типу long long.\n");
                 return 1;
             }
 
-            product = new_product;
+            product = next_product;
             has_nonzero = 1;
         }
     }
 
-    printf("Original array A: ");
-    for (int i = 0; i < n; i++) {
-        printf("%d ", A[i]);
-    }
-
-    printf("\nNew array C: ");
-    for (int i = 0; i < n; i++) {
-        printf("%d ", C[i]);
-    }
+    printf("Масив C (остачі): ");
+    print_array(c, n);
 
     if (has_nonzero) {
-        printf("\nProduct of non-zero elements of C: %lld\n", product);
+        printf("Добуток ненульових елементів C: %lld\n", product);
     } else {
-        printf("\nThere are no non-zero elements in C.\n");
+        printf("Ненульових елементів у масиві C немає.\n");
     }
 
     return 0;
