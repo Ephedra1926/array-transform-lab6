@@ -1,0 +1,38 @@
+name: Build and test C program
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Отримати код репозиторію
+        uses: actions/checkout@v6
+
+      - name: Встановити GCC
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc
+
+      - name: Скомпілювати програму
+        run: gcc -Wall -Wextra main.c -o lab6
+
+      - name: Запустити тест
+        run: |
+          printf '4\n12\n25\n7\n40\n7\n' | ./lab6 > output.txt
+          cat output.txt
+
+          if grep -q "5 4 0 5" output.txt && grep -q "100" output.txt; then
+            echo "Тест пройдено успішно."
+          else
+            echo "Тест не пройдено."
+            exit 1
+          fi
