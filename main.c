@@ -4,9 +4,10 @@
 
 void print_array(const int a[], int n)
 {
+    printf("[");
     for (int i = 0; i < n; i++)
-        printf("%d ", a[i]);
-    printf("\n");
+        printf("%5d", a[i]);   
+    printf(" ]\n");
 }
 
 int main(void)
