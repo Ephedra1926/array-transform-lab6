@@ -16,25 +16,20 @@ void print_array(const int a[], int n)
 
 int checked_multiply(long long a, long long b, long long *result)
 {
-    if (a == 0  b == 0) {
+    if (a == 0 || b == 0) {
         *result = 0;
         return 1;
     }
 
-    if (b > 0) {
-        if (a > LLONG_MAX / b  a < LLONG_MIN / b) {
-            return 0;
-        }
+    if (a == -1 && b == LLONG_MIN) return 0;
+    if (b == -1 && a == LLONG_MIN) return 0;
+
+    if (a > 0) {
+        if (b > 0 && a > LLONG_MAX / b) return 0;
+        if (b < 0 && b < LLONG_MIN / a) return 0;
     } else {
-        if (a > 0) {
-            if (b < LLONG_MIN / a) {
-                return 0;
-            }
-        } else {
-            if (a < LLONG_MAX / b) {
-                return 0;
-            }
-        }
+        if (b > 0 && a < LLONG_MIN / b) return 0;
+        if (b < 0 && a < LLONG_MAX / b) return 0;
     }
 
     *result = a * b;
@@ -47,18 +42,18 @@ int main(void)
     int c[MAX_N];
     int n;
     int k;
+    long long product = 1;
+    int has_nonzero = 0;
 
     printf("Введіть розмір масиву (1..%d): ", MAX_N);
 
-    if (scanf("%d", &n) != 1  n < 1  n > MAX_N) {
+    if (scanf("%d", &n) != 1 || n < 1 || n > MAX_N) {
         printf("Помилка: некоректний розмір масиву.\n");
         return 1;
     }
 
-   
     srand((unsigned int)time(NULL));
 
-   
     for (int i = 0; i < n; i++) {
         a[i] = rand() % 100;
     }
@@ -66,43 +61,16 @@ int main(void)
     printf("Заданий масив A: ");
     print_array(a, n);
 
-    printf("Введіть ціле число k (k < 10): ");
+    printf("Введіть ціле число k (k < 10, k != 0): ");
 
-    if (scanf("%d", &k) != 1 || k >= 10) {
+    if (scanf("%d", &k) != 1 || k == 0 || k >= 10 || k <= -10) {
         printf("Помилка: некоректне значення k.\n");
         return 1;
     }
 
-    if (k == 0) {
-        printf("Помилка: ділення на нуль неможливе.\n");
-        printf("Масив C не може бути утворений.\n");
-        return 1;
-    }
-
-   
     for (int i = 0; i < n; i++) {
         c[i] = (int)((long long)a[i] % (long long)k);
-    }
 
-    printf("Масив C (остачі): ");
-    print_array(c, n);
-
-    int count = 0;
-
-    for (int i = 0; i < n; i++) {
-        if (c[i] != 0) {
-            count++;
-        }
-    }
-
-    if (count == 0) {
-        printf("Ненульових елементів у масиві C немає.\n");
-        return 0;
-    }
-
-    long long product = 1;
-
-    for (int i = 0; i < n; i++) {
         if (c[i] != 0) {
             long long next_product;
 
@@ -112,10 +80,18 @@ int main(void)
             }
 
             product = next_product;
+            has_nonzero = 1;
         }
     }
 
-    printf("Добуток ненульових елементів C: %lld\n", product);
+    printf("Масив C (остачі): ");
+    print_array(c, n);
+
+    if (has_nonzero) {
+        printf("Добуток ненульових елементів C: %lld\n", product);
+    } else {
+        printf("Ненульових елементів у масиві C немає.\n");
+    }
 
     return 0;
 }
