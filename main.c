@@ -24,8 +24,14 @@ int main(void)
         return 1;
     }
 
+    if (k == 0) {
+        printf("Помилка: ділення на нуль неможливе.\n");
+        printf("Масив C не може бути утворений.\n");
+        return 1;
+    }
+
     for (int i = 0; i < N; i++)
-        c[i] = a[i] % k;
+        c[i] = (int)((long long)a[i] % (long long)k);
 
     printf("Масив C (остачі): ");
     print_array(c, N);
